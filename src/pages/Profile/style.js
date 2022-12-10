@@ -38,4 +38,7 @@ export const WrapperUploadFile = styled(Upload)`
         height: 60px;
         border-radius: 50%;
     }
+    & .ant-upload-list-item-info {
+        display: none
+    }
 `
