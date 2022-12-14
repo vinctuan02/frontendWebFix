@@ -8,7 +8,7 @@ const initialState = {
     avatar: '',
     access_token: '',
     id: '',
-    isAdmin : false
+    isAdmin: false
 }
 
 export const userSlide = createSlice({
@@ -24,7 +24,7 @@ export const userSlide = createSlice({
             state.avatar = avatar;
             state.id = _id
             state.access_token = access_token;
-            state.isAdmin = true;
+            state.isAdmin = isAdmin;
 
         },
         resetUser: (state) => {
