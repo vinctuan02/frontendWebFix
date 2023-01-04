@@ -25,17 +25,13 @@ const AdminUser = () => {
   const user = useSelector((state) => state?.user)
   const searchInput = useRef(null);
 
-  const [stateUser, setStateUser] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    isAdmin: false,
-  })
   const [stateUserDetails, setStateUserDetails] = useState({
     name: '',
     email: '',
     phone: '',
     isAdmin: false,
+    avatar: '',
+    address: ''
   })
 
   const [form] = Form.useForm();
@@ -97,6 +93,8 @@ const AdminUser = () => {
         email: res?.data?.email,
         phone: res?.data?.phone,
         isAdmin: res?.data?.isAdmin,
+        address: res?.data?.address,
+        avatar: res.data?.avatar
       })
     }
     setIsLoadingUpdate(false)
@@ -105,7 +103,7 @@ const AdminUser = () => {
   useEffect(() => {
     form.setFieldsValue(stateUserDetails)
   }, [form, stateUserDetails])
-  console.log('rowSelected', rowSelected)
+
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {
       setIsLoadingUpdate(true)
@@ -229,6 +227,12 @@ const AdminUser = () => {
       ...getColumnSearchProps('email')
     },
     {
+      title: 'Address',
+      dataIndex: 'address',
+      sorter: (a, b) => a.address.length - b.address.length,
+      ...getColumnSearchProps('address')
+    },
+    {
       title: 'Admin',
       dataIndex: 'isAdmin',
       filters: [
@@ -314,17 +318,6 @@ const AdminUser = () => {
     })
   }
 
-  const handleOnchangeAvatar = async ({ fileList }) => {
-    const file = fileList[0]
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setStateUser({
-      ...stateUser,
-      image: file.preview
-    })
-  }
-
   const handleOnchangeAvatarDetails = async ({ fileList }) => {
     const file = fileList[0]
     if (!file.url && !file.preview) {
@@ -332,7 +325,7 @@ const AdminUser = () => {
     }
     setStateUserDetails({
       ...stateUserDetails,
-      image: file.preview
+      avatar: file.preview
     })
   }
   const onUpdateUser = () => {
@@ -342,6 +335,7 @@ const AdminUser = () => {
       }
     })
   }
+
   return (
     <div>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
@@ -383,20 +377,28 @@ const AdminUser = () => {
             <Form.Item
               label="Phone"
               name="phone"
-              rules={[{ required: true, message: 'Please input your count phone!' }]}
+              rules={[{ required: true, message: 'Please input your  phone!' }]}
             >
               <InputComponent value={stateUserDetails.phone} onChange={handleOnchangeDetails} name="phone" />
             </Form.Item>
 
-            {/* <Form.Item
-              label="Image"
-              name="image"
-              rules={[{ required: true, message: 'Please input your count image!' }]}
+            <Form.Item
+              label="Adress"
+              name="address"
+              rules={[{ required: true, message: 'Please input your  address!' }]}
+            >
+              <InputComponent value={stateUserDetails.address} onChange={handleOnchangeDetails} name="address" />
+            </Form.Item>
+
+            <Form.Item
+              label="Avatar"
+              name="avatar"
+              rules={[{ required: true, message: 'Please input your image!' }]}
             >
               <WrapperUploadFile onChange={handleOnchangeAvatarDetails} maxCount={1}>
                 <Button >Select File</Button>
-                {stateProductDetails?.image && (
-                  <img src={stateProductDetails?.image} style={{
+                {stateUserDetails?.avatar && (
+                  <img src={stateUserDetails?.avatar} style={{
                     height: '60px',
                     width: '60px',
                     borderRadius: '50%',
@@ -405,7 +407,7 @@ const AdminUser = () => {
                   }} alt="avatar" />
                 )}
               </WrapperUploadFile>
-            </Form.Item> */}
+            </Form.Item>
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
                 Apply
