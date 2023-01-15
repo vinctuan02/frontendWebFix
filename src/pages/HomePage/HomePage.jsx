@@ -61,6 +61,7 @@ const HomePage = () => {
                   type={product.type}
                   selled={product.selled}
                   discount={product.discount}
+                  id={product._id}
                 />
               )
             })}
