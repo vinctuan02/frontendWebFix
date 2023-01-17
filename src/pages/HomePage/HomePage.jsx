@@ -12,16 +12,16 @@ import { useSelector } from 'react-redux'
 import { useState } from 'react'
 import Loading from '../../components/LoadingComponent/Loading'
 import { useDebounce } from '../../hooks/useDebounce'
+import { useEffect } from 'react'
 
 const HomePage = () => {
   const searchProduct = useSelector((state) => state?.product?.search)
   const searchDebounce = useDebounce(searchProduct, 1000)
   const [loading, setLoading] = useState(false)
   const [limit, setLimit] = useState(6)
-  // const [page, setLimit] = useState(6)
-  const arr = ['TV', 'Tu lanh', 'Lap top']
+  const [typeProducts, setTypeProducts] = useState([])
+  
   const fetchProductAll = async (context) => {
-    console.log('context', context)
     const limit = context?.queryKey && context?.queryKey[1]
     const search = context?.queryKey && context?.queryKey[2]
     const res = await ProductService.getAllProduct(search, limit)
@@ -30,14 +30,24 @@ const HomePage = () => {
 
   }
 
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllTypeProduct()
+    if(res?.status === 'OK') {
+      setTypeProducts(res?.data)
+    }
+  }
+
   const { isLoading, data: products, isPreviousData } = useQuery(['products', limit, searchDebounce], fetchProductAll, { retry: 3, retryDelay: 1000, keepPreviousData: true })
 
-  console.log('isPreviousData', products)
+  useEffect(() => {
+    fetchAllTypeProduct()
+  }, [])
+
   return (
     <Loading isLoading={isLoading || loading}>
       <div style={{ width: '1270px', margin: '0 auto' }}>
         <WrapperTypeProduct>
-          {arr.map((item) => {
+          {typeProducts.map((item) => {
             return (
               <TypeProduct name={item} key={item} />
             )
