@@ -16,6 +16,7 @@ import * as  UserService from '../../services/UserService'
 import Loading from '../../components/LoadingComponent/Loading';
 import * as message from '../../components/Message/Message'
 import { updateUser } from '../../redux/slides/userSlide';
+import { useNavigate } from 'react-router-dom';
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order)
@@ -29,6 +30,7 @@ const OrderPage = () => {
     address: '',
     city: ''
   })
+  const navigate = useNavigate()
   const [form] = Form.useForm();
 
   const dispatch = useDispatch()
@@ -84,6 +86,10 @@ const OrderPage = () => {
     }
   }, [isOpenModalUpdateInfo])
 
+  const handleChangeAddress = () => {
+    setIsOpenModalUpdateInfo(true)
+  }
+
   const priceMemo = useMemo(() => {
     const result = order?.orderItemsSlected?.reduce((total, cur) => {
       return total + ((cur.price * cur.amount))
@@ -126,6 +132,8 @@ const OrderPage = () => {
       message.error('Vui lòng chọn sản phẩm')
     }else if(!user?.phone || !user.address || !user.name || !user.city) {
       setIsOpenModalUpdateInfo(true)
+    }else {
+      navigate('/payment')
     } 
   }
 
@@ -226,6 +234,13 @@ const OrderPage = () => {
           </WrapperLeft>
           <WrapperRight>
             <div style={{width: '100%'}}>
+              <WrapperInfo>
+                <div>
+                  <span>Địa chỉ: </span>
+                  <span style={{fontWeight: 'bold'}}>{ `${user?.address} ${user?.city}`} </span>
+                  <span onClick={handleChangeAddress} style={{color: 'blue', cursor:'pointer'}}>Thay đổi</span>
+                </div>
+              </WrapperInfo>
               <WrapperInfo>
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                   <span>Tạm tính</span>
