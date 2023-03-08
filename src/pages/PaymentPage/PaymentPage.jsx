@@ -14,6 +14,8 @@ import * as OrderService from '../../services/OrderService'
 import Loading from '../../components/LoadingComponent/Loading';
 import * as message from '../../components/Message/Message'
 import { updateUser } from '../../redux/slides/userSlide';
+import { useNavigate } from 'react-router-dom';
+import { removeAllOrderProduct } from '../../redux/slides/orderSlide';
 
 const PaymentPage = () => {
   const order = useSelector((state) => state.order)
@@ -21,6 +23,7 @@ const PaymentPage = () => {
 
   const [delivery, setDelivery] = useState('fast')
   const [payment, setPayment] = useState('later_money')
+  const navigate = useNavigate()
 
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false)
   const [stateUserDetails, setStateUserDetails] = useState({
@@ -134,7 +137,20 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (isSuccess && dataAdd?.status === 'OK') {
-      message.success('Đặt hằng thành cống')
+      const arrayOrdered = []
+      order?.orderItemsSlected?.forEach(element => {
+        arrayOrdered.push(element.product)
+      });
+      dispatch(removeAllOrderProduct({listChecked: arrayOrdered}))
+      message.success('Đặt hàng thành công')
+      navigate('/orderSuccess', {
+        state: {
+          delivery,
+          payment,
+          orders: order?.orderItemsSlected,
+          totalPriceMemo: totalPriceMemo
+        }
+      })
     } else if (isError) {
       message.error()
     }
