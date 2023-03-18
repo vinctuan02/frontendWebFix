@@ -24,8 +24,7 @@ const AdminProduct = () => {
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false)
   const user = useSelector((state) => state?.user)
   const searchInput = useRef(null);
-
-  const [stateProduct, setStateProduct] = useState({
+  const inittial = () => ({
     name: '',
     price: '',
     description: '',
@@ -36,16 +35,8 @@ const AdminProduct = () => {
     newType: '',
     discount: '',
   })
-  const [stateProductDetails, setStateProductDetails] = useState({
-    name: '',
-    price: '',
-    description: '',
-    rating: '',
-    image: '',
-    type: '',
-    countInStock: '',
-    discount: '',
-  })
+  const [stateProduct, setStateProduct] = useState(inittial())
+  const [stateProductDetails, setStateProductDetails] = useState(inittial())
 
   const [form] = Form.useForm();
 
@@ -130,8 +121,12 @@ const AdminProduct = () => {
   }
 
   useEffect(() => {
-    form.setFieldsValue(stateProductDetails)
-  }, [form, stateProductDetails])
+    if(!isModalOpen) {
+      form.setFieldsValue(stateProductDetails)
+    }else {
+      form.setFieldsValue(inittial())
+    }
+  }, [form, stateProductDetails, isModalOpen])
 
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {
