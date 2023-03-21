@@ -55,13 +55,16 @@ const ProductDetailsComponent = ({idProduct}) => {
             //         required: true,
             //     },
             // },
+            console.log('productDetails', productDetails)
             dispatch(addOrderProduct({
                 orderItem: {
                     name: productDetails?.name,
                     amount: numProduct,
                     image: productDetails?.image,
                     price: productDetails?.price,
-                    product: productDetails?._id
+                    product: productDetails?._id,
+                    discount: productDetails?.discount,
+                    countInstock: productDetails?.countInStock
                 }
             }))
         }
