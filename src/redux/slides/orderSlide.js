@@ -25,7 +25,6 @@ export const orderSlide = createSlice({
     addOrderProduct: (state, action) => {
       const {orderItem} = action.payload
       const itemOrder = state?.orderItems?.find((item) => item?.product === orderItem.product)
-      console.log('itemOrder', itemOrder)
       if(itemOrder){
         if(itemOrder.amount <= itemOrder.countInstock) {
           itemOrder.amount += orderItem?.amount
