@@ -55,16 +55,15 @@ function App() {
   }
 
   return (
-    <div>
+    <div style={{height: '100vh', width: '100vw'}}>
       <Loading isLoading={isLoading}>
         <Router>
           <Routes>
             {routes.map((route) => {
               const Page = route.page
-              const ischeckAuth = !route.isPrivated || user.isAdmin || ''
               const Layout = route.isShowHeader ? DefaultComponent : Fragment
               return (
-                <Route key={route.path} path={ischeckAuth && route.path} element={
+                <Route key={route.path} path={ route.path} element={
                   <Layout>
                     <Page />
                   </Layout>

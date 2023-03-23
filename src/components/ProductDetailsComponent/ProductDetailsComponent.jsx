@@ -110,7 +110,7 @@ const ProductDetailsComponent = ({idProduct}) => {
 
     return (
         <Loading isLoading={isLoading}>
-            <Row style={{ padding: '16px', background: '#fff', borderRadius: '4px' }}>
+            <Row style={{ padding: '16px', background: '#fff', borderRadius: '4px', height:'100%' }}>
                 <Col span={10} style={{ borderRight: '1px solid #e5e5e5', paddingRight: '8px' }}>
                     <Image src={productDetails?.image} alt="image prodcut" preview={false} />
                     <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
@@ -154,7 +154,7 @@ const ProductDetailsComponent = ({idProduct}) => {
                         <span className='change-address'>Đổi địa chỉ</span>
                     </WrapperAddressProduct>
                     <LikeButtonComponent
-                     dataHref={ process.env.REACY_APP_IS_LOCAL 
+                     dataHref={ process.env.REACT_APP_IS_LOCAL 
                                 ? "https://developers.facebook.com/docs/plugins/" 
                                 : window.location.href
                             } 
@@ -203,7 +203,7 @@ const ProductDetailsComponent = ({idProduct}) => {
                     </div>
                 </Col>
                 <CommentComponent 
-                    dataHref={process.env.REACY_APP_IS_LOCAL 
+                    dataHref={process.env.REACT_APP_IS_LOCAL 
                         ? "https://developers.facebook.com/docs/plugins/comments#configurator"
                         : window.location.href
                     } 
