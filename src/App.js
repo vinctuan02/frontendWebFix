@@ -24,8 +24,6 @@ function App() {
     setIsLoading(false)
   }, [])
 
-
-
   const handleDecoded = () => {
     let storageData = localStorage.getItem('access_token')
     let decoded = {}
