@@ -39,15 +39,15 @@ const SignInPage = () => {
       if (data?.access_token) {
         const decoded = jwt_decode(data?.access_token)
         if (decoded?.id) {
-          handleGetDetailsUser(decoded?.id, data?.access_token, data.refresh_token)
+          handleGetDetailsUser(decoded?.id, data?.access_token)
         }
       }
     }
   }, [isSuccess])
 
-  const handleGetDetailsUser = async (id, token, refresh_token) => {
+  const handleGetDetailsUser = async (id, token) => {
     const res = await UserService.getDetailsUser(id, token)
-    dispatch(updateUser({ ...res?.data, access_token: token,refresh_token: refresh_token }))
+    dispatch(updateUser({ ...res?.data, access_token: token }))
   }
 
 
