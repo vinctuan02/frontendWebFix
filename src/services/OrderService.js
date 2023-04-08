@@ -6,7 +6,7 @@ import { axiosJWT } from "./UserService"
 // // }
 // http://localhost:3001/api/order/get-order-details/639724669c6dda4fa11edcde
 export const createOrder = async (data,access_token) => {
-  const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/order/create`, data, {
+  const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/order/create/${data.user}`, data, {
       headers: {
           token: `Bearer ${access_token}`,
       }
