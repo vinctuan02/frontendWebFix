@@ -18,6 +18,7 @@ function App() {
   useEffect(() => {
     setIsLoading(true)
     const { storageData, decoded } = handleDecoded()
+    console.log('usser', user)
     if (decoded?.id) {
       handleGetDetailsUser(decoded?.id, storageData)
     }
@@ -53,7 +54,7 @@ function App() {
   }
 
   return (
-    <div style={{height: '100vh', width: '100vw'}}>
+    <div style={{height: '100vh', width: '100%'}}>
       <Loading isLoading={isLoading}>
         <Router>
           <Routes>
