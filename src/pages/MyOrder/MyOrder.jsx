@@ -18,6 +18,7 @@ const MyOrderPage = () => {
     const res = await OrderService.getOrderByUserId(state?.id, state?.token)
     return res.data
   }
+  const user = useSelector((state) => state.user)
 
   const queryOrder = useQuery({ queryKey: ['orders'], queryFn: fetchMyOrder }, {
     enabled: state?.id && state?.token
@@ -34,14 +35,14 @@ const MyOrderPage = () => {
 
   const mutation = useMutationHooks(
     (data) => {
-      const { id, token , orderItems } = data
-      const res = OrderService.cancelOrder(id, token,orderItems)
+      const { id, token , orderItems, userId } = data
+      const res = OrderService.cancelOrder(id, token,orderItems, userId)
       return res
     }
   )
 
   const handleCanceOrder = (order) => {
-    mutation.mutate({id : order._id, token:state?.token, orderItems: order?.orderItems }, {
+    mutation.mutate({id : order._id, token:state?.token, orderItems: order?.orderItems, userId: user.id }, {
       onSuccess: () => {
         queryOrder.refetch()
       },
