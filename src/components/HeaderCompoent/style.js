@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const WrapperHeader = styled(Row)`
-    background-color: rgb(26, 148, 255);
+    background-color: var(--primary-color);
     align-items: center;
     gap: 16px;
     flex-wrap: nowrap;
@@ -16,6 +16,10 @@ export const WrapperTextHeader = styled(Link)`
     color: #fff;
     font-weight: bold;
     text-align: left;
+    &:hover {
+        font-size: 18px;
+        color: #fff;
+    }
 `
 
 export const WrapperHeaderAccout = styled.div`

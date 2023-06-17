@@ -1,6 +1,6 @@
 import {Checkbox, Form } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { WrapperCountOrder, WrapperInfo, WrapperItemOrder, WrapperLeft, WrapperListOrder, WrapperRight, WrapperStyleHeader, WrapperStyleHeaderDilivery, WrapperTotal } from './style';
+import { CustomCheckbox, WrapperCountOrder, WrapperInfo, WrapperItemOrder, WrapperLeft, WrapperListOrder, WrapperRight, WrapperStyleHeader, WrapperStyleHeaderDilivery, WrapperTotal } from './style';
 import { DeleteOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons'
 
 import { WrapperInputNumber } from '../../components/ProductDetailsComponent/style';
@@ -195,16 +195,17 @@ const OrderPage = () => {
       description: 'Từ 200.000 VND đến dưới 500.000 VND',
     },
     {
-      title: '0 VND',
+      title: 'Free ship',
       description : 'Trên 500.000 VND',
     },
   ]
   return (
     <div style={{background: '#f5f5fa', with: '100%', height: '100vh'}}>
       <div style={{height: '100%', width: '1270px', margin: '0 auto'}}>
-        <h3>Giỏ hàng</h3>
+        <h3 style={{fontWeight: 'bold'}}>Giỏ hàng</h3>
         <div style={{ display: 'flex', justifyContent: 'center'}}>
           <WrapperLeft>
+            <h4>Phí giao hàng</h4>
             <WrapperStyleHeaderDilivery>
               <StepComponent items={itemsDelivery} current={diliveryPriceMemo === 10000 
                 ? 2 : diliveryPriceMemo === 20000 ? 1 
@@ -212,7 +213,7 @@ const OrderPage = () => {
             </WrapperStyleHeaderDilivery>
             <WrapperStyleHeader>
                 <span style={{display: 'inline-block', width: '390px'}}>
-                  <Checkbox onChange={handleOnchangeCheckAll} checked={listChecked?.length === order?.orderItems?.length}></Checkbox>
+                  <CustomCheckbox onChange={handleOnchangeCheckAll} checked={listChecked?.length === order?.orderItems?.length}></CustomCheckbox>
                   <span> Tất cả ({order?.orderItems?.length} sản phẩm)</span>
                 </span>
                 <div style={{flex:1,display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
@@ -227,7 +228,7 @@ const OrderPage = () => {
                 return (
                   <WrapperItemOrder key={order?.product}>
                 <div style={{width: '390px', display: 'flex', alignItems: 'center', gap: 4}}> 
-                  <Checkbox onChange={onChange} value={order?.product} checked={listChecked.includes(order?.product)}></Checkbox>
+                  <CustomCheckbox onChange={onChange} value={order?.product} checked={listChecked.includes(order?.product)}></CustomCheckbox>
                   <img src={order?.image} style={{width: '77px', height: '79px', objectFit: 'cover'}}/>
                   <div style={{
                     width: 260,
@@ -263,7 +264,7 @@ const OrderPage = () => {
                 <div>
                   <span>Địa chỉ: </span>
                   <span style={{fontWeight: 'bold'}}>{ `${user?.address} ${user?.city}`} </span>
-                  <span onClick={handleChangeAddress} style={{color: 'blue', cursor:'pointer'}}>Thay đổi</span>
+                  <span onClick={handleChangeAddress} style={{color: '#9255FD', cursor:'pointer'}}>Thay đổi</span>
                 </div>
               </WrapperInfo>
               <WrapperInfo>
