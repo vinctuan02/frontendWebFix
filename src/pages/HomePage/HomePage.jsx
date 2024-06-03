@@ -2,7 +2,7 @@ import React from 'react'
 import SliderComponent from '../../components/SliderComponent/SliderComponent'
 import TypeProduct from '../../components/TypeProduct/TypeProduct'
 import { WrapperButtonMore, WrapperProducts, WrapperTypeProduct } from './style'
-import slider1 from '../../assets/images/slider1.webp'
+// import slider1 from '../../assets/images/slider1.webp'
 import slider2 from '../../assets/images/slider2.webp'
 import slider3 from '../../assets/images/slider3.webp'
 import CardComponent from '../../components/CardComponent/CardComponent'
@@ -20,7 +20,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false)
   const [limit, setLimit] = useState(6)
   const [typeProducts, setTypeProducts] = useState([])
-  
+
   const fetchProductAll = async (context) => {
     const limit = context?.queryKey && context?.queryKey[1]
     const search = context?.queryKey && context?.queryKey[2]
@@ -32,7 +32,7 @@ const HomePage = () => {
 
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct()
-    if(res?.status === 'OK') {
+    if (res?.status === 'OK') {
       setTypeProducts(res?.data)
     }
   }
@@ -49,14 +49,14 @@ const HomePage = () => {
         <WrapperTypeProduct>
           {typeProducts.map((item) => {
             return (
-              <TypeProduct name={item} key={item}/>
+              <TypeProduct name={item} key={item} />
             )
           })}
         </WrapperTypeProduct>
       </div>
       <div className='body' style={{ width: '100%', backgroundColor: '#efefef', }}>
         <div id="container" style={{ height: '1000px', width: '1270px', margin: '0 auto' }}>
-          <SliderComponent arrImages={[slider1, slider2, slider3]} />
+          <SliderComponent arrImages={[slider2, slider3]} />
           <WrapperProducts>
             {products?.data?.map((product) => {
               return (
