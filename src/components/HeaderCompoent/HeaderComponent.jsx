@@ -1,21 +1,14 @@
 import { Badge, Button, Col, Popover } from 'antd'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { WrapperContentPopup, WrapperHeader, WrapperHeaderAccout, WrapperTextHeader, WrapperTextHeaderSmall } from './style'
-import {
-  UserOutlined,
-  CaretDownOutlined,
-  ShoppingCartOutlined
-} from '@ant-design/icons';
-import ButttonInputSearch from '../ButtonInputSearch/ButttonInputSearch';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { UserOutlined, CaretDownOutlined, ShoppingCartOutlined } from '@ant-design/icons'
+import ButttonInputSearch from '../ButtonInputSearch/ButttonInputSearch'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import * as UserService from '../../services/UserService'
 import { resetUser } from '../../redux/slides/userSlide'
-import { useState } from 'react';
-import Loading from '../LoadingComponent/Loading';
-import { useEffect } from 'react';
-import { searchProduct } from '../../redux/slides/productSlide';
-
+import Loading from '../LoadingComponent/Loading'
+import { searchProduct } from '../../redux/slides/productSlide'
 
 const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const navigate = useNavigate()
@@ -23,10 +16,11 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const dispatch = useDispatch()
   const [userName, setUserName] = useState('')
   const [userAvatar, setUserAvatar] = useState('')
-  const [search,setSearch] = useState('')
+  const [search, setSearch] = useState('')
   const [isOpenPopup, setIsOpenPopup] = useState(false)
   const order = useSelector((state) => state.order)
   const [loading, setLoading] = useState(false)
+
   const handleNavigateLogin = () => {
     navigate('/sign-in')
   }
@@ -49,26 +43,26 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     <div>
       <WrapperContentPopup onClick={() => handleClickNavigate('profile')}>Thông tin người dùng</WrapperContentPopup>
       {user?.isAdmin && (
-
         <WrapperContentPopup onClick={() => handleClickNavigate('admin')}>Quản lí hệ thống</WrapperContentPopup>
       )}
       <WrapperContentPopup onClick={() => handleClickNavigate(`my-order`)}>Đơn hàng của tôi</WrapperContentPopup>
       <WrapperContentPopup onClick={() => handleClickNavigate()}>Đăng xuất</WrapperContentPopup>
     </div>
-  );
+  )
 
   const handleClickNavigate = (type) => {
-    if(type === 'profile') {
+    if (type === 'profile') {
       navigate('/profile-user')
-    }else if(type === 'admin') {
+    } else if (type === 'admin') {
       navigate('/system/admin')
-    }else if(type === 'my-order') {
-      navigate('/my-order',{ state : {
+    } else if (type === 'my-order') {
+      navigate('/my-order', {
+        state: {
           id: user?.id,
-          token : user?.access_token
+          token: user?.access_token
         }
       })
-    }else {
+    } else {
       handleLogout()
     }
     setIsOpenPopup(false)
@@ -80,7 +74,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   }
 
   return (
-    <div style={{  heiht: '100%', width: '100%', display: 'flex',background: '#9255FD', justifyContent: 'center' }}>
+    <div style={{ height: '100%', width: '100%', display: 'flex', background: '#3EAEF4', justifyContent: 'center' }}>
       <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenSearch ? 'space-between' : 'unset' }}>
         <Col span={5}>
           <WrapperTextHeader to='/'>SHOP</WrapperTextHeader>
@@ -93,7 +87,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               textbutton="Tìm kiếm"
               placeholder="input search text"
               onChange={onSearch}
-              backgroundColorButton="#5a20c1"
+              backgroundColorButton="#92B9E3"
             />
           </Col>
         )}
@@ -113,7 +107,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               {user?.access_token ? (
                 <>
                   <Popover content={content} trigger="click" open={isOpenPopup}>
-                    <div style={{ cursor: 'pointer',maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis' }} onClick={() => setIsOpenPopup((prev) => !prev)}>{userName?.length ? userName : user?.email}</div>
+                    <div style={{ cursor: 'pointer', maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis' }} onClick={() => setIsOpenPopup((prev) => !prev)}>{userName?.length ? userName : user?.email}</div>
                   </Popover>
                 </>
               ) : (
@@ -128,7 +122,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             </WrapperHeaderAccout>
           </Loading>
           {!isHiddenCart && (
-            <div onClick={() => navigate('/order')} style={{cursor: 'pointer'}}>
+            <div onClick={() => navigate('/order')} style={{ cursor: 'pointer' }}>
               <Badge count={order?.orderItems?.length} size="small">
                 <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
               </Badge>

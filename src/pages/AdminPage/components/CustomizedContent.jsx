@@ -1,36 +1,36 @@
-import { UserOutlined, AppstoreOutlined, ShoppingCartOutlined } from '@ant-design/icons'
+import { UserOutlined, AppstoreOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 
-const CustomizedContent = (props) => {
-  const {data, colors, setKeySelected } = props
+const CustomizedContent = ({ data, colors, setKeySelected }) => {
   return (
-    <div style={{display: 'flex', gap: '40px', justifyContent: 'center'}}>
-      {Object.keys(data) && Object.keys(data)?.map((item) => {
-        return (
-          <div 
-          key={Math.random()} 
+    <div style={{ display: 'flex', gap: '40px', justifyContent: 'center' }}>
+      {Object.keys(data).map((item) => (
+        <div
+          key={item}
           style={{
             width: 300,
-            background:`linear-gradient(${colors[item] && colors[item][0]}, ${colors[item] && colors[item][1]})`, 
-            height: 200, 
-            display: 'flex', 
-            gap: 20, 
-            justifyContent: 'center', 
+            background: `linear-gradient(${colors[item]?.[0] || '#000'}, ${colors[item]?.[1] || '#000'})`,
+            height: 200,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
             alignItems: 'center',
             borderRadius: '10px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            padding: '20px',
+            color: '#fff',
+            fontSize: 20,
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
           }}
-            onClick={() => setKeySelected(item)}
-          >
-            <span style={{color: '#fff',fontSize: 30,}}>
-              {item === 'users' && <UserOutlined />}
-              {item === 'products' && <AppstoreOutlined />}
-              {item === 'orders' && <ShoppingCartOutlined />}
-            </span>
-            <span style={{color: '#fff',fontSize: 30, fontWeight: 'bold', textTransform: 'uppercase',}}>{item}</span>
-            <span style={{color: '#fff',fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase'}}>{data[item]}</span>
-          </div>
-        )
-      })}
+          onClick={() => setKeySelected(item)}
+        >
+          {item === 'users' && <UserOutlined style={{ fontSize: 50 }} />}
+          {item === 'products' && <AppstoreOutlined style={{ fontSize: 50 }} />}
+          {item === 'orders' && <ShoppingCartOutlined style={{ fontSize: 50 }} />}
+          <span>{item}</span>
+          <span>{data[item]}</span>
+        </div>
+      ))}
     </div>
   );
 };

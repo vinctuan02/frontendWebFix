@@ -1,29 +1,28 @@
-import { Button, Form, Space } from 'antd'
-import React from 'react'
-import { WrapperHeader, WrapperUploadFile } from './style'
-import TableComponent from '../TableComponent/TableComponent'
-import InputComponent from '../InputComponent/InputComponent'
-import DrawerComponent from '../DrawerComponent/DrawerComponent'
-import Loading from '../LoadingComponent/Loading'
-import ModalComponent from '../ModalComponent/ModalComponent'
-import { getBase64 } from '../../utils'
-import { useEffect } from 'react'
-import * as message from '../../components/Message/Message'
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useRef } from 'react'
-import { useMutationHooks } from '../../hooks/useMutationHook'
-import * as UserService from '../../services/UserService'
-import { useIsFetching, useQuery, useQueryClient } from '@tanstack/react-query'
-import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
+import { Button, Form, Space } from 'antd';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { WrapperHeader, WrapperUploadFile } from './style';
+import TableComponent from '../TableComponent/TableComponent';
+import InputComponent from '../InputComponent/InputComponent';
+import DrawerComponent from '../DrawerComponent/DrawerComponent';
+import Loading from '../LoadingComponent/Loading';
+import ModalComponent from '../ModalComponent/ModalComponent';
+import { getBase64 } from '../../utils';
+import * as message from '../../components/Message/Message';
+import { useSelector } from 'react-redux';
+import { useMutationHooks } from '../../hooks/useMutationHook';
+import * as UserService from '../../services/UserService';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
+import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 
 const AdminUser = () => {
-  const [rowSelected, setRowSelected] = useState('')
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false)
-  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
-  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false)
-  const user = useSelector((state) => state?.user)
+  const [rowSelected, setRowSelected] = useState('');
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const user = useSelector((state) => state?.user);
+  const users = useSelector((state) => state?.users); // Assuming users data is stored in the Redux state
   const searchInput = useRef(null);
+  const queryClient = useQueryClient();
 
   const [stateUserDetails, setStateUserDetails] = useState({
     name: '',
@@ -32,55 +31,35 @@ const AdminUser = () => {
     isAdmin: false,
     avatar: '',
     address: ''
-  })
+  });
 
   const [form] = Form.useForm();
 
-  const mutationUpdate = useMutationHooks(
-    (data) => {
-      const { id,
-        token,
-        ...rests } = data
-      const res = UserService.updateUser(
-        id,
-        { ...rests }, token)
-      return res
-    },
-  )
+  const mutationUpdate = useMutationHooks((data) => {
+    const { id, token, ...rests } = data;
+    return UserService.updateUser(id, { ...rests }, token);
+  });
 
-  const mutationDeletedMany = useMutationHooks(
-    (data) => {
-      const { token, ...ids
-      } = data
-      const res = UserService.deleteManyUser(
-        ids,
-        token)
-      return res
-    },
-  )
+  const mutationDeletedMany = useMutationHooks((data) => {
+    const { token, ...ids } = data;
+    return UserService.deleteManyUser(ids, token);
+  });
 
-  const handleDelteManyUsers = (ids) => {
-    mutationDeletedMany.mutate({ ids: ids, token: user?.access_token }, {
+  const handleDeleteManyUsers = (ids) => {
+    mutationDeletedMany.mutate({ ids, token: user?.access_token }, {
       onSettled: () => {
-        queryClient.invalidateQueries(['users'])
+        queryClient.invalidateQueries(['users']);
       }
-    })
-  }
+    });
+  };
 
-  const mutationDeleted = useMutationHooks(
-    (data) => {
-      const { id,
-        token,
-      } = data
-      const res = UserService.deleteUser(
-        id,
-        token)
-      return res
-    },
-  )
+  const mutationDeleted = useMutationHooks((data) => {
+    const { id, token } = data;
+    return UserService.deleteUser(id, token);
+  });
 
   const fetchGetDetailsUser = async (rowSelected) => {
-    const res = await UserService.getDetailsUser(rowSelected)
+    const res = await UserService.getDetailsUser(rowSelected);
     if (res?.data) {
       setStateUserDetails({
         name: res?.data?.name,
@@ -88,71 +67,81 @@ const AdminUser = () => {
         phone: res?.data?.phone,
         isAdmin: res?.data?.isAdmin,
         address: res?.data?.address,
-        avatar: res.data?.avatar
-      })
+        avatar: res?.data?.avatar
+      });
     }
-    setIsLoadingUpdate(false)
-  }
+    setIsLoadingUpdate(false);
+  };
 
   useEffect(() => {
-    form.setFieldsValue(stateUserDetails)
-  }, [form, stateUserDetails])
+    form.setFieldsValue(stateUserDetails);
+  }, [form, stateUserDetails]);
 
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {
-      setIsLoadingUpdate(true)
-      fetchGetDetailsUser(rowSelected)
+      setIsLoadingUpdate(true);
+      fetchGetDetailsUser(rowSelected);
     }
-  }, [rowSelected, isOpenDrawer])
+  }, [rowSelected, isOpenDrawer]);
 
   const handleDetailsProduct = () => {
-    setIsOpenDrawer(true)
-  }
+    setIsOpenDrawer(true);
+  };
 
-  const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
-  const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDelected, isError: isErrorDeleted } = mutationDeleted
-  const { data: dataDeletedMany, isLoading: isLoadingDeletedMany, isSuccess: isSuccessDelectedMany, isError: isErrorDeletedMany } = mutationDeletedMany
+  const {
+    data: dataUpdated,
+    isLoading: isLoadingUpdated,
+    isSuccess: isSuccessUpdated,
+    isError: isErrorUpdated
+  } = mutationUpdate;
 
-  const queryClient = useQueryClient()
-  const users = queryClient.getQueryData(['users'])
-  const isFetchingUser = useIsFetching(['users'])
-  const renderAction = () => {
-    return (
-      <div>
-        <DeleteOutlined style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} onClick={() => setIsModalOpenDelete(true)} />
-        <EditOutlined style={{ color: 'orange', fontSize: '30px', cursor: 'pointer' }} onClick={handleDetailsProduct} />
-      </div>
-    )
-  }
+  const {
+    data: dataDeleted,
+    isLoading: isLoadingDeleted,
+    isSuccess: isSuccessDeleted,
+    isError: isErrorDeleted
+  } = mutationDeleted;
+
+  const {
+    data: dataDeletedMany,
+    isLoading: isLoadingDeletedMany,
+    isSuccess: isSuccessDeletedMany,
+    isError: isErrorDeletedMany
+  } = mutationDeletedMany;
+
+  const isFetchingUser = useIsFetching(['users']);
+
+  const renderAction = useCallback(() => (
+    <div>
+      <DeleteOutlined
+        style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }}
+        onClick={() => setIsModalOpenDelete(true)}
+      />
+      <EditOutlined
+        style={{ color: 'orange', fontSize: '30px', cursor: 'pointer' }}
+        onClick={handleDetailsProduct}
+      />
+    </div>
+  ), [setIsModalOpenDelete, handleDetailsProduct]);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
-    // setSearchText(selectedKeys[0]);
-    // setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
-    // setSearchText('');
   };
 
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <InputComponent
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
+          style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
@@ -160,18 +149,14 @@ const AdminUser = () => {
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
-            style={{
-              width: 90,
-            }}
+            style={{ width: 90 }}
           >
             Search
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
-            style={{
-              width: 90,
-            }}
+            style={{ width: 90 }}
           >
             Reset
           </Button>
@@ -179,11 +164,7 @@ const AdminUser = () => {
       </div>
     ),
     filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? '#1890ff' : undefined,
-        }}
-      />
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
     onFilter: (value, record) =>
       record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
@@ -191,24 +172,10 @@ const AdminUser = () => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
       }
-    },
-    // render: (text) =>
-    //   searchedColumn === dataIndex ? (
-    //     // <Highlighter
-    //     //   highlightStyle={{
-    //     //     backgroundColor: '#ffc069',
-    //     //     padding: 0,
-    //     //   }}
-    //     //   searchWords={[searchText]}
-    //     //   autoEscape
-    //     //   textToHighlight={text ? text.toString() : ''}
-    //     // />
-    //   ) : (
-    //     text
-    //   ),
+    }
   });
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       title: 'Name',
       dataIndex: 'name',
@@ -231,15 +198,9 @@ const AdminUser = () => {
       title: 'Admin',
       dataIndex: 'isAdmin',
       filters: [
-        {
-          text: 'True',
-          value: true,
-        },
-        {
-          text: 'False',
-          value: false,
-        }
-      ],
+        { text: 'True', value: true },
+        { text: 'False', value: false }
+      ]
     },
     {
       title: 'Phone',
@@ -251,28 +212,31 @@ const AdminUser = () => {
       title: 'Action',
       dataIndex: 'action',
       render: renderAction
-    },
-  ];
-  const dataTable = users?.data?.length > 0 && users?.data?.map((user) => {
-    return { ...user, key: user._id, isAdmin: user.isAdmin ? 'TRUE' : 'FALSE' }
-  })
+    }
+  ], [renderAction]);
+
+  const dataTable = useMemo(() => users?.data?.map((user) => ({
+    ...user,
+    key: user._id,
+    isAdmin: user.isAdmin ? 'TRUE' : 'FALSE'
+  })), [users]);
 
   useEffect(() => {
-    if (isSuccessDelected && dataDeleted?.status === 'OK') {
-      message.success()
-      handleCancelDelete()
+    if (isSuccessDeleted && dataDeleted?.status === 'OK') {
+      message.success();
+      handleCancelDelete();
     } else if (isErrorDeleted) {
-      message.error()
+      message.error();
     }
-  }, [isSuccessDelected])
+  }, [isSuccessDeleted, isErrorDeleted]);
 
   useEffect(() => {
-    if (isSuccessDelectedMany && dataDeletedMany?.status === 'OK') {
-      message.success()
+    if (isSuccessDeletedMany && dataDeletedMany?.status === 'OK') {
+      message.success();
     } else if (isErrorDeletedMany) {
-      message.error()
+      message.error();
     }
-  }, [isSuccessDelectedMany])
+  }, [isSuccessDeletedMany, isErrorDeletedMany]);
 
   const handleCloseDrawer = () => {
     setIsOpenDrawer(false);
@@ -281,71 +245,79 @@ const AdminUser = () => {
       email: '',
       phone: '',
       isAdmin: false,
-    })
-    form.resetFields()
+      avatar: '',
+      address: ''
+    });
+    form.resetFields();
   };
 
   useEffect(() => {
     if (isSuccessUpdated && dataUpdated?.status === 'OK') {
-      message.success()
-      handleCloseDrawer()
+      message.success();
+      handleCloseDrawer();
     } else if (isErrorUpdated) {
-      message.error()
+      message.error();
     }
-  }, [isSuccessUpdated])
+  }, [isSuccessUpdated, isErrorUpdated]);
 
   const handleCancelDelete = () => {
-    setIsModalOpenDelete(false)
-  }
+    setIsModalOpenDelete(false);
+    setRowSelected('');
+  };
 
   const handleDeleteUser = () => {
     mutationDeleted.mutate({ id: rowSelected, token: user?.access_token }, {
       onSettled: () => {
-        queryClient.invalidateQueries(['users'])
+        queryClient.invalidateQueries(['users']);
       }
-    })
-  }
+    });
+  };
 
   const handleOnchangeDetails = (e) => {
     setStateUserDetails({
       ...stateUserDetails,
       [e.target.name]: e.target.value
-    })
-  }
+    });
+  };
 
   const handleOnchangeAvatarDetails = async ({ fileList }) => {
-    const file = fileList[0]
+    const file = fileList[0];
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
     setStateUserDetails({
       ...stateUserDetails,
       avatar: file.preview
-    })
-  }
+    });
+  };
+
   const onUpdateUser = () => {
-    mutationUpdate.mutate({ id: rowSelected, token: user?.access_token, ...stateUserDetails }, {
-      onSettled: () => {
-        queryClient.invalidateQueries(['users'])
+    mutationUpdate.mutate(
+      { id: rowSelected, token: user?.access_token, ...stateUserDetails },
+      {
+        onSettled: () => {
+          queryClient.invalidateQueries(['users']);
+        }
       }
-    })
-  }
+    );
+  };
 
   return (
     <div>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
       <div style={{ marginTop: '20px' }}>
-        <TableComponent handleDelteMany={handleDelteManyUsers} columns={columns} isLoading={isFetchingUser} data={dataTable} onRow={(record, rowIndex) => {
-          return {
-            onClick: event => {
-              setRowSelected(record._id)
-            }
-          };
-        }} />
+        <TableComponent
+          handleDelteMany={handleDeleteManyUsers}
+          columns={columns}
+          isLoading={isFetchingUser}
+          data={dataTable}
+          onRow={(record) => ({
+            onClick: () => setRowSelected(record._id)
+          })}
+        />
       </div>
-      <DrawerComponent title='Chi tiết người dùng' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width="90%">
+      <DrawerComponent title="Chi tiết người dùng" isOpen={isOpenDrawer} onClose={handleCloseDrawer} width="90%">
         <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
-
           <Form
             name="basic"
             labelCol={{ span: 2 }}
@@ -359,47 +331,48 @@ const AdminUser = () => {
               name="name"
               rules={[{ required: true, message: 'Please input your name!' }]}
             >
-              <InputComponent value={stateUserDetails['name']} onChange={handleOnchangeDetails} name="name" />
+              <InputComponent value={stateUserDetails.name} onChange={handleOnchangeDetails} name="name" />
             </Form.Item>
-
             <Form.Item
               label="Email"
               name="email"
               rules={[{ required: true, message: 'Please input your email!' }]}
             >
-              <InputComponent value={stateUserDetails['email']} onChange={handleOnchangeDetails} name="email" />
+              <InputComponent value={stateUserDetails.email} onChange={handleOnchangeDetails} name="email" />
             </Form.Item>
             <Form.Item
               label="Phone"
               name="phone"
-              rules={[{ required: true, message: 'Please input your  phone!' }]}
+              rules={[{ required: true, message: 'Please input your phone!' }]}
             >
               <InputComponent value={stateUserDetails.phone} onChange={handleOnchangeDetails} name="phone" />
             </Form.Item>
-
             <Form.Item
-              label="Adress"
+              label="Address"
               name="address"
-              rules={[{ required: true, message: 'Please input your  address!' }]}
+              rules={[{ required: true, message: 'Please input your address!' }]}
             >
               <InputComponent value={stateUserDetails.address} onChange={handleOnchangeDetails} name="address" />
             </Form.Item>
-
             <Form.Item
               label="Avatar"
               name="avatar"
               rules={[{ required: true, message: 'Please input your image!' }]}
             >
               <WrapperUploadFile onChange={handleOnchangeAvatarDetails} maxCount={1}>
-                <Button >Select File</Button>
-                {stateUserDetails?.avatar && (
-                  <img src={stateUserDetails?.avatar} style={{
-                    height: '60px',
-                    width: '60px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    marginLeft: '10px'
-                  }} alt="avatar" />
+                <Button>Select File</Button>
+                {stateUserDetails.avatar && (
+                  <img
+                    src={stateUserDetails.avatar}
+                    style={{
+                      height: '60px',
+                      width: '60px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      marginLeft: '10px'
+                    }}
+                    alt="avatar"
+                  />
                 )}
               </WrapperUploadFile>
             </Form.Item>
@@ -417,7 +390,7 @@ const AdminUser = () => {
         </Loading>
       </ModalComponent>
     </div>
-  )
-}
+  );
+};
 
-export default AdminUser
+export default AdminUser;

@@ -9,24 +9,26 @@ const ButttonInputSearch = (props) => {
     size, placeholder, textbutton,
     bordered, backgroundColorInput = '#fff',
     backgroundColorButton = 'rgb(13, 92, 182)',
-    colorButton = '#fff'
+    colorButton = '#fff',
+    ...restProps // Tách riêng các props khác
   } = props
 
   return (
-    <div style={{ display: 'flex', }}>
+    <div style={{ display: 'flex' }}>
       <InputComponent
         size={size}
         placeholder={placeholder}
         bordered={bordered}
         style={{ backgroundColor: backgroundColorInput }}
-        {...props}
+        {...restProps} // Truyền các props khác vào đây
       />
       <ButtonComponent
         size={size}
         styleButton={{ background: backgroundColorButton, border: !bordered && 'none' }}
-        icon={<SearchOutlined color={colorButton} style={{ color: '#fff' }} />}
+        icon={<SearchOutlined style={{ color: colorButton }} />}
         textbutton={textbutton}
         styleTextButton={{ color: colorButton }}
+        {...restProps} // Truyền các props khác vào đây
       />
     </div>
   )
