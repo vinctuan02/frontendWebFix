@@ -71,6 +71,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
     }
 
     const { isLoading, data: productDetails } = useQuery(['product-details', idProduct], fetchGetDetailsProduct, { enabled: !!idProduct })
+    console.log("productDetails:", productDetails)
     const handleAddOrderProduct = () => {
         if (!user?.id) {
             navigate('/sign-in', { state: location?.pathname })
@@ -101,22 +102,22 @@ const ProductDetailsComponent = ({ idProduct }) => {
                     <Image src={productDetails?.image} alt="image product" preview={false} />
                     <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
                         <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={false} />
+                            <WrapperStyleImageSmall src={productDetails?.image} alt="image small" preview={false} />
                         </WrapperStyleColImage>
                         <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={false} />
+                            <WrapperStyleImageSmall src={productDetails?.image} alt="image small" preview={false} />
                         </WrapperStyleColImage>
                         <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={false} />
+                            <WrapperStyleImageSmall src={productDetails?.image} alt="image small" preview={false} />
                         </WrapperStyleColImage>
                         <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={false} />
+                            <WrapperStyleImageSmall src={productDetails?.image} alt="image small" preview={false} />
                         </WrapperStyleColImage>
                         <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={false} />
+                            <WrapperStyleImageSmall src={productDetails?.image} alt="image small" preview={false} />
                         </WrapperStyleColImage>
                         <WrapperStyleColImage span={4}>
-                            <WrapperStyleImageSmall src={imageProductSmall} alt="image small" preview={false} />
+                            <WrapperStyleImageSmall src={productDetails?.image} alt="image small" preview={false} />
                         </WrapperStyleColImage>
                     </Row>
                 </Col>
@@ -127,12 +128,15 @@ const ProductDetailsComponent = ({ idProduct }) => {
                         <WrapperStyleTextSell> | Đã bán 1000+</WrapperStyleTextSell>
                     </div>
                     <WrapperPriceProduct>
-                        <WrapperPriceTextProduct>{convertPrice(productDetails?.price)}</WrapperPriceTextProduct>
+                        <WrapperPriceTextProduct>Giá: {convertPrice(productDetails?.price)}</WrapperPriceTextProduct>
                     </WrapperPriceProduct>
+                    <h4>
+                        Mô tả: {productDetails?.description}
+                    </h4>
                     <WrapperAddressProduct>
-                        <span>Giao đến </span>
-                        <span className='address'>{user?.address}</span> -
-                        <span className='change-address'>Đổi địa chỉ</span>
+                        <span>Giao đến: </span>
+                        <span className='address'>{user?.address}</span>
+                        {/* <span className='change-address'>Đổi địa chỉ</span> */}
                     </WrapperAddressProduct>
                     <LikeButtonComponent
                         dataHref={process.env.REACT_APP_IS_LOCAL

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hóa Đơn Giao Hàng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        .invoice-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .invoice-header h1 {
+            margin: 0;
+        }
+
+        .invoice-header p {
+            margin: 5px 0;
+        }
+
+        .invoice-details {
+            margin-bottom: 20px;
+        }
+
+        .invoice-details p {
+            margin: 5px 0;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .invoice-table th,
+        .invoice-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .invoice-table th {
+            background-color: #f0f0f0;
+        }
+
+        .invoice-summary {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .invoice-summary p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+
+        .total-amount {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .note {
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <h1>HÓA ĐƠN GIAO HÀNG</h1>
+            <p><strong>Cửa hàng:</strong> Công ty TNHH ABC</p>
+            <p><strong>Địa chỉ:</strong> 123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</p>
+            <p><strong>Số điện thoại:</strong> 0909 999 999</p>
+            <p><strong>Email:</strong> info@abc.com</p>
+        </div>
+        <div class="invoice-details">
+            <p><strong>Khách hàng:</strong> Nguyễn Văn A</p>
+            <p><strong>Địa chỉ giao hàng:</strong> 456 Đường DEF, Quận GHI, TP. Hồ Chí Minh</p>
+            <p><strong>Số điện thoại:</strong> 0988 888 888</p>
+            <p><strong>Phương thức giao hàng:</strong> Nhanh (Fast)</p>
+            <p><strong>Phương thức thanh toán:</strong> Thanh toán sau (later_money)</p>
+            <p><strong>Ngày tạo:</strong> 06/06/2024</p>
+        </div>
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá (VND)</th>
+                    <th>Giảm giá (%)</th>
+                    <th>Thành tiền (VND)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Đồng hồ thông minh Huawei Watch Kids 4 Pro</td>
+                    <td>2</td>
+                    <td>1,000,000</td>
+                    <td>20</td>
+                    <td>1,600,000</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="invoice-summary">
+            <p><strong>Tổng giá trị trước giảm giá:</strong> 2,000,000 VND</p>
+            <p><strong>Giảm giá:</strong> 20% (400,000 VND)</p>
+            <p><strong>Tổng giá trị sau giảm giá:</strong> 1,600,000 VND</p>
+            <p><strong>Phí giao hàng:</strong> 100,000 VND</p>
+            <p class="total-amount"><strong>Tổng cộng:</strong> 1,700,000 VND</p>
+        </div>
+        <div class="note">
+            <p><strong>Tổng tiền ghi nhớ:</strong> 1,210,000 VND</p>
+        </div>
+        <p class="invoice-footer">Cảm ơn quý khách đã mua sắm tại cửa hàng chúng tôi!</p>
+    </div>
+</body>
+
+</html>

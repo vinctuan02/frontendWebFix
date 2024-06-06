@@ -148,12 +148,13 @@ const PaymentPage = () => {
       });
       dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }))
       message.success('Đặt hàng thành công')
-      navigate('/orderSuccess', {
+      navigate('/invoice', {
         state: {
           delivery,
           payment,
           orders: order?.orderItemsSlected,
-          totalPriceMemo: totalPriceMemo
+          totalPriceMemo: totalPriceMemo,
+          user: user
         }
       })
     } else if (isError) {
@@ -293,7 +294,7 @@ const PaymentPage = () => {
                   <span>Tổng tiền</span>
                   <span style={{ display: 'flex', flexDirection: 'column' }}>
                     <span style={{ color: 'rgb(254, 56, 52)', fontSize: '24px', fontWeight: 'bold' }}>{convertPrice(totalPriceMemo)}</span>
-                    <span style={{ color: '#000', fontSize: '11px' }}>(Đã bao gồm VAT nếu có)</span>
+                    <span style={{ color: '#000', fontSize: '11px' }}>(Chưa bao gồm VAT)</span>
                   </span>
                 </WrapperTotal>
               </div>
