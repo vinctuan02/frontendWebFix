@@ -299,6 +299,7 @@ const PaymentPage = () => {
                 </WrapperTotal>
               </div>
               {payment === 'paypal' && sdkReady ? (
+                // {payment === 'paypal' ? (
                 <div style={{ width: '320px' }}>
                   <PayPalButton
                     amount={Math.round(totalPriceMemo / 30000)}
